@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Unit.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Controller.tscn" type="PackedScene" id=2]
+
+[sub_resource type="NavigationPolygon" id=1]
+vertices = PoolVector2Array( 1382.03, -690.933, 1516.18, 1093.76, -1194.02, 875.193, -1154.83, -591.449 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+outlines = [ PoolVector2Array( -1154.83, -591.449, -1194.02, 875.193, 1516.18, 1093.76, 1382.03, -690.933 ) ]
+
+[node name="Environment" type="Node2D"]
+
+[node name="Navigation2D" type="Navigation2D" parent="."]
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
+navpoly = SubResource( 1 )
+
+[node name="Unit" parent="." instance=ExtResource( 1 )]
+position = Vector2( 60.4608, 38.5415 )
+
+[node name="Unit2" parent="." instance=ExtResource( 1 )]
+position = Vector2( -9.66789, 348.277 )
+
+[node name="Unit3" parent="." instance=ExtResource( 1 )]
+position = Vector2( -401.22, 231.395 )
+
+[node name="Unit4" parent="." instance=ExtResource( 1 )]
+position = Vector2( -227.846, -103.664 )
+
+[node name="Controller" parent="." instance=ExtResource( 2 )]
+position = Vector2( -56.628, 65.4471 )
