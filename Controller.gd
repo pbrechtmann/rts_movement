@@ -25,8 +25,13 @@ func _process(delta):
 		select_units()
 
 	if Input.is_action_just_pressed("main_command"):
+		var total = Vector2.ZERO
 		for unit in selected_units:
-			unit.move_to(mouse)
+			total += unit.position
+		var center = total / selected_units.size()
+		for unit in selected_units:
+			var start_vec = unit.position - center
+			unit.move_to(mouse + start_vec.normalized() * 100)
 
 	var cam_move = Vector2.ZERO
 	if Input.is_action_pressed("cam_down"):

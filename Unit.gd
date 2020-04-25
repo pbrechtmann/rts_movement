@@ -6,7 +6,10 @@ var path = []
 
 var path_color = Color("#ffffff")
 
+var distance = Vector2(100, 0)
+
 onready var nav = get_parent().get_node("Navigation2D")
+onready var tween = $Tween
 
 func _ready():
 	add_to_group("unit")
@@ -27,6 +30,8 @@ func _physics_process(delta):
 			path.remove(0)
 		else:
 			move_and_slide(move.normalized() * speed)
+
+
 	update()
 
 
