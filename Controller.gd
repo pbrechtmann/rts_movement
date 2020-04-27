@@ -10,8 +10,6 @@ var sel_rect = RectangleShape2D.new()
 
 var box_color = Color("#ffffff")
 
-onready var click = $Click
-
 
 func _process(delta):
 	mouse = get_global_mouse_position()
@@ -25,13 +23,23 @@ func _process(delta):
 		select_units()
 
 	if Input.is_action_just_pressed("main_command"):
-		var total = Vector2.ZERO
-		for unit in selected_units:
-			total += unit.position
-		var center = total / selected_units.size()
-		for unit in selected_units:
-			var start_vec = unit.position - center
-			unit.move_to(mouse + start_vec.normalized() * 100)
+		var size = ceil(sqrt(selected_units.size()))
+		var x_vals = []
+		var y_vals = []
+		for i in range(size):
+			x_vals.append(i)
+			y_vals.append(i)
+		var targets = []
+		for x in range(x_vals.size()):
+			for y in range(y_vals.size()):
+				targets.append(Vector2(x,y))
+		var mat_middle = targets[ceil(targets.size() / 2)]
+		var spacer = 200
+		for i in range(targets.size()):
+			targets[i] -= mat_middle
+			targets[i] = mouse + targets[i] * spacer
+		for i in range(selected_units.size()):
+			selected_units[i].move_to(targets[i])
 
 	var cam_move = Vector2.ZERO
 	if Input.is_action_pressed("cam_down"):
@@ -45,6 +53,7 @@ func _process(delta):
 
 	position += cam_move * cam_speed
 	update()
+
 
 func _draw():
 	if box:
