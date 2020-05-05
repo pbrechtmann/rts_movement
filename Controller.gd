@@ -6,6 +6,8 @@ var mouse
 var box = false
 var selected_units = []
 
+var leader = null
+
 var sel_rect = RectangleShape2D.new()
 
 var box_color = Color("#ffffff")
@@ -24,22 +26,20 @@ func _process(delta):
 
 	if Input.is_action_just_pressed("main_command"):
 		var size = ceil(sqrt(selected_units.size()))
-		var x_vals = []
-		var y_vals = []
-		for i in range(size):
-			x_vals.append(i)
-			y_vals.append(i)
 		var targets = []
-		for x in range(x_vals.size()):
-			for y in range(y_vals.size()):
-				targets.append(Vector2(x,y))
-		var mat_middle = targets[ceil(targets.size() / 2)]
-		var spacer = 200
-		for i in range(targets.size()):
-			targets[i] -= mat_middle
-			targets[i] = mouse + targets[i] * spacer
-		for i in range(selected_units.size()):
-			selected_units[i].move_to(targets[i])
+		leader.move_to(mouse)
+#		for x in range(size):
+#			for y in range(size):
+#				targets.append(Vector2(x,y))
+#		var mat_middle = targets[ceil(targets.size() / 2)]
+#		var spacer = 200
+#
+#		for i in range(targets.size()):
+#			targets[i] -= mat_middle
+#			targets[i] = mouse + targets[i] * spacer
+#		for i in range(selected_units.size()):
+#			if selected_units[i].is_leader():
+#				selected_units[i].move_to(targets[i])
 
 	var cam_move = Vector2.ZERO
 	if Input.is_action_pressed("cam_down"):
@@ -70,10 +70,12 @@ func select_units():
 			new_units.append(u)
 	for unit in selected_units:
 		unit.deselect()
+		unit.deselect_leader()
 	if new_units.size() > 0:
 		for unit in new_units:
 			unit.select()
 		selected_units = new_units
+		select_leader_in_group()
 
 
 func select_units_box(drag_end):
@@ -88,6 +90,7 @@ func select_units_box(drag_end):
 			selection.append(u.get("collider"))
 	return selection
 
+
 func select_unit_mouse():
 	var unit = get_world_2d().get_direct_space_state().intersect_point(mouse, 1)
 	if not unit.empty():
@@ -95,3 +98,19 @@ func select_unit_mouse():
 		if u.is_in_group("unit"):
 			return u
 	return null
+
+
+func select_leader_in_group():
+	var total = Vector2.ZERO
+	for unit in selected_units:
+		total += unit.get_position()
+	var center = total / selected_units.size()
+	leader = null
+	var dist = INF
+	for unit in selected_units:
+		var test_dist = unit.get_position().distance_squared_to(center)
+		if test_dist < dist:
+			leader = unit
+			dist = test_dist
+	if leader != null:
+		leader.select_leader()

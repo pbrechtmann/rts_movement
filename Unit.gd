@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 var speed = 1000
 var selected = false
+var leader = false
 var path = []
 
 var path_color = Color("#ffffff")
@@ -78,6 +79,10 @@ func get_velocity():
 	return move
 
 
+func is_leader():
+	return leader
+
+
 func select():
 	selected = true
 	$Selection.show()
@@ -86,3 +91,13 @@ func select():
 func deselect():
 	selected = false
 	$Selection.hide()
+
+
+func select_leader():
+	leader = true
+	$Leader.show()
+
+
+func deselect_leader():
+	leader = false
+	$Leader.hide()
