@@ -19,6 +19,10 @@ config/name="RTS Movement"
 run/main_scene="res://Environment.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Steering="*res://Steering.gd"
+
 [input]
 
 main_command={
