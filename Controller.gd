@@ -17,21 +17,15 @@ func _process(delta):
 		selection_start = mouse
 	if Input.is_action_pressed("alt_command"):
 		box = true
-		pass
 	if Input.is_action_just_released("alt_command"):
 		box = false
 		select_units()
 
 	if Input.is_action_just_pressed("main_command"):
 		var size = ceil(sqrt(selected_units.size()))
-		var x_vals = []
-		var y_vals = []
-		for i in range(size):
-			x_vals.append(i)
-			y_vals.append(i)
 		var targets = []
-		for x in range(x_vals.size()):
-			for y in range(y_vals.size()):
+		for x in range(size):
+			for y in range(size):
 				targets.append(Vector2(x,y))
 		var mat_middle = targets[ceil(targets.size() / 2)]
 		var spacer = 200
@@ -41,6 +35,20 @@ func _process(delta):
 		for i in range(selected_units.size()):
 			selected_units[i].move_to(targets[i])
 
+	cam_movement()
+
+
+	#call _draw update
+	update()
+
+
+func _draw():
+	#draw selection box
+	if box:
+		draw_rect(Rect2(selection_start - position, mouse - selection_start), box_color, false)
+
+
+func cam_movement():
 	var cam_move = Vector2.ZERO
 	if Input.is_action_pressed("cam_down"):
 		cam_move.y += 1
@@ -52,12 +60,7 @@ func _process(delta):
 		cam_move.x += 1
 
 	position += cam_move * cam_speed
-	update()
 
-
-func _draw():
-	if box:
-		draw_rect(Rect2(selection_start - position, mouse - selection_start), box_color, false)
 
 
 func select_units():
@@ -76,6 +79,7 @@ func select_units():
 		selected_units = new_units
 
 
+#box select multiple units
 func select_units_box(drag_end):
 	sel_rect.extents = (selection_start - drag_end) / 2
 	var query = Physics2DShapeQueryParameters.new()
@@ -88,6 +92,8 @@ func select_units_box(drag_end):
 			selection.append(u.get("collider"))
 	return selection
 
+
+#select only one unit
 func select_unit_mouse():
 	var unit = get_world_2d().get_direct_space_state().intersect_point(mouse, 1)
 	if not unit.empty():
