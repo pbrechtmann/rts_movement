@@ -36,15 +36,15 @@ func move_to(target):
 
 
 func alignment():
-	var alignement_vec = Vector2.ZERO
+	var alignment_vec = Vector2.ZERO
 	var bodies = neighbor_area.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("unit"):
-			alignement_vec += body.get_velocity()
+			alignment_vec += body.get_velocity()
 	if bodies.size() == 0:
-		return alignement_vec
-	alignement_vec / bodies.size()
-	return alignement_vec.normalized()
+		return alignment_vec
+	alignment_vec /= bodies.size()
+	return alignment_vec.normalized()
 
 
 func cohesion():
@@ -55,7 +55,7 @@ func cohesion():
 			cohesion_vec += body.position
 	if bodies.size() == 0:
 		return cohesion_vec
-	cohesion_vec / bodies.size()
+	cohesion_vec /= bodies.size()
 	cohesion_vec -= position
 	return cohesion_vec.normalized()
 
@@ -69,7 +69,7 @@ func separation():
 			separation_vec.y += position.y - body.position.y
 	if bodies.size() == 0:
 		return separation_vec
-	separation_vec / bodies.size()
+	separation_vec /= bodies.size()
 	separation_vec *= -1
 	return separation_vec.normalized()
 
